@@ -1,0 +1,11 @@
+environments:
+  lab:
+
+releases:
+- name: argocd
+  namespace: argocd
+  chart: ../argocd/argocd
+  labels:
+    app: argocd
+  missingFileHandler: Error
+
