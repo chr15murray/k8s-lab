@@ -1,6 +1,3 @@
-environments:
-  lab:
-
 releases:
 - name: argocd
   namespace: argocd
@@ -8,4 +5,14 @@ releases:
   labels:
     app: argocd
   missingFileHandler: Error
-
+- name: argocd-cloudflared
+  namespace: argocd
+  chart: ../cloudflare/argo-tunnel
+  labels:
+    app: argocd
+  values:
+    - cloudflared:
+        hostname: argocd.distrail.io
+        url: https://argocd-server
+        tlsVerify: false
+        sealedSecretCert: {{ exec "kubeseal" (list "--raw" "--from-file=/home/chris//keys/cloudflared/origin-cert.pem" "--scope=cluster-wide" ) }}

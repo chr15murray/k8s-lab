@@ -1,0 +1,48 @@
+releases:
+
+# helm install istio-base -n istio-system manifests/charts/base
+- name: istio-base
+  namespace: istio-system
+  chart: ../istio/istio-1.10.0/manifests/charts/base
+  labels:
+    app: istio
+  missingFileHandler: Error
+
+# helm install istiod manifests/charts/istio-control/istio-discovery -n istio-system
+- name: istio-istiod
+  namespace: istio-system
+  chart: ../istio/istio-1.10.0/manifests/charts/istio-control/istio-discovery
+  labels:
+    app: istio
+  missingFileHandler: Error
+  needs:
+  - istio-system/istio-base
+  values:
+  - ../istio/istio-istiod-values.yaml
+
+# helm install istio-ingress manifests/charts/gateways/istio-ingress -n istio-system
+- name: istio-ingress
+  namespace: istio-system
+  chart: ../istio/istio-1.10.0/manifests/charts/gateways/istio-ingress
+  labels:
+    app: istio
+  missingFileHandler: Error
+  needs:
+  - istio-system/istio-istiod
+  values:
+  - ../istio/istio-ingress-values.yaml
+
+# Export Load Balancer via Argo Tunnel
+- name: istio-cloudflared
+  namespace: istio-system
+  chart: ../cloudflare/argo-tunnel
+  labels:
+    app: istio
+  needs:
+  - istio-system/istio-ingress
+  values:
+    - cloudflared:
+        hostname: istio-ingress.distrail.io
+        url: http://istio-ingressgateway
+        tlsVerify: false
+        sealedSecretCert: {{ exec "kubeseal" (list "--raw" "--from-file=/home/chris//keys/cloudflared/origin-cert.pem" "--scope=cluster-wide" ) }}

@@ -1,0 +1,14 @@
+# Requires Cert to have been pre-seeded. This is not recomended for production
+# but makes the lab easy to destroy and recreate without resealing all secrets.
+secretName: sealed-secret-key
+
+commandArgs:
+- --key-renew-period=0 # disable cert renew for the labs
+
+# serviceMonitor:
+#   create: true
+#   namespace: monitoring
+
+dashboards:
+  create: true
+  namespace: monitoring

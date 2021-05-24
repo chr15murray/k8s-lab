@@ -1,0 +1,34 @@
+# A-la-carte istio ingress gateway.
+# Must be installed in a separate namespace, to minimize access to secrets.
+
+gateways:
+  istio-ingressgateway:
+    ports:
+    - port: 80
+      targetPort: 8080
+      name: http2
+      protocol: TCP
+    - port: 443
+      targetPort: 8443
+      name: https
+      protocol: TCP
+
+    replicaCount: 1
+    autoscaleEnabled: false
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 1024Mi
+
+    podAnnotations: {}
+    type: ClusterIP #change to NodePort, ClusterIP or LoadBalancer if need be
+
+global:
+  # enable pod disruption budget for the control plane, which is used to
+  # ensure Istio control plane components are gradually upgraded or recovered.
+  defaultPodDisruptionBudget:
+    enabled: false

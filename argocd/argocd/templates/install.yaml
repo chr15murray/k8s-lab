@@ -2322,13 +2322,13 @@ subjects:
   name: argocd-server
   namespace: argocd
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/name: argocd-cm
-    app.kubernetes.io/part-of: argocd
-  name: argocd-cm
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   labels:
+#     app.kubernetes.io/name: argocd-cm
+#     app.kubernetes.io/part-of: argocd
+#   name: argocd-cm
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -2338,13 +2338,13 @@ metadata:
     app.kubernetes.io/part-of: argocd
   name: argocd-gpg-keys-cm
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/name: argocd-rbac-cm
-    app.kubernetes.io/part-of: argocd
-  name: argocd-rbac-cm
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   labels:
+#     app.kubernetes.io/name: argocd-rbac-cm
+#     app.kubernetes.io/part-of: argocd
+#   name: argocd-rbac-cm
 ---
 apiVersion: v1
 data:
@@ -2372,14 +2372,14 @@ metadata:
     app.kubernetes.io/part-of: argocd
   name: argocd-tls-certs-cm
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/name: argocd-secret
-    app.kubernetes.io/part-of: argocd
-  name: argocd-secret
-type: Opaque
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   labels:
+#     app.kubernetes.io/name: argocd-secret
+#     app.kubernetes.io/part-of: argocd
+#   name: argocd-secret
+# type: Opaque
 ---
 apiVersion: v1
 kind: Service

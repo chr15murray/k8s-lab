@@ -1,3 +1,7 @@
+repositories:
+- name: sealed-secrets
+  url: https://bitnami-labs.github.io/sealed-secrets
+
 helmDefaults:
   atomic: true
   cleanupOnFail: true
