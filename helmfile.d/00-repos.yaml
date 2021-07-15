@@ -1,7 +1,8 @@
 repositories:
+- name: raw
+  url: https://bedag.github.io/helm-charts/
 - name: sealed-secrets
   url: https://bitnami-labs.github.io/sealed-secrets
-
 helmDefaults:
   atomic: true
   cleanupOnFail: true

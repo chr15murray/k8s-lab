@@ -1,0 +1,24 @@
+releases:
+- name: argocd
+  namespace: argocd
+  chart: ../argocd/argocd
+  labels:
+    app: argocd
+  needs:
+  - kube-system/sealed-secrets-controller
+  values:
+  - argocd:
+      sealedSecret: {{ exec "kubeseal" (list "-f" "/home/chris/keys/argocd-secret.yaml" "--scope=cluster-wide" "--cert"  "../sealedsecret.crt") }}
+      # /home/chris/keys/argocd-repo-distrail-io.yaml
+  missingFileHandler: Error
+- name: argocd-cloudflared
+  namespace: argocd
+  chart: ../cloudflare/argo-tunnel
+  labels:
+    app: argocd
+  values:
+  - cloudflared:
+      hostname: argocd.distrail.io
+      url: https://argocd-server
+      tlsVerify: false
+      sealedSecretCert: {{ exec "kubeseal" (list "--raw" "--from-file=/home/chris/keys/cloudflared/origin-cert.pem" "--scope=cluster-wide" "--cert" "../sealedsecret.crt" ) }}

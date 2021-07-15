@@ -40,9 +40,10 @@ releases:
     app: istio
   needs:
   - istio-system/istio-ingress
+  - kube-system/sealed-secrets-controller
   values:
     - cloudflared:
         hostname: istio-ingress.distrail.io
         url: http://istio-ingressgateway
         tlsVerify: false
-        sealedSecretCert: {{ exec "kubeseal" (list "--raw" "--from-file=/home/chris//keys/cloudflared/origin-cert.pem" "--scope=cluster-wide" ) }}
+        sealedSecretCert: {{ exec "kubeseal" (list "--raw" "--from-file=/home/chris/keys/cloudflared/origin-cert.pem" "--scope=cluster-wide" "--cert" "../sealedsecret.crt" ) }}

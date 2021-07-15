@@ -1,0 +1,14 @@
+releases:
+- name: raw
+  namespace: kube-system
+  chart: raw/raw
+  version: 1.1.0
+  labels:
+    app: raw
+  missingFileHandler: Error
+  values:
+  - resources:
+    - apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: monitoring
