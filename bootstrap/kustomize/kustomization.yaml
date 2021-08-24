@@ -1,0 +1,21 @@
+bases:
+- github.com/argoproj/argo-cd//manifests/cluster-install?ref=v2.1.0
+namespace: argocd
+
+resources:
+- resources/argocd-namespace.yaml
+- resources/argocd-secret.yaml
+- resources/argocd-distrailio-secret.yaml
+- resources/argocd-bootstrap-app.yaml
+# - overlays/lab/argo-cd-cm.yaml
+
+# patchesStrategicMerge:
+# - overlays/lab/argo-cd-cm.yaml
+
+patches:
+- path: overlays/lab/argo-cd-cm.yaml
+  target:
+    kind: ConfigMap
+- path: overlays/lab/argocd-rbac-cm.yaml
+  target:
+    kind: ConfigMap

@@ -1,0 +1,10 @@
+env:
+  POLLER_INTERVAL_MILLISECONDS: 120000  # Caution, setting this frequency may incur additional charges on some platforms
+  LOG_LEVEL: info
+  METRICS_PORT: 3001
+  GOOGLE_APPLICATION_CREDENTIALS: /app/gcp-creds/gcp-creds.json
+
+filesFromSecret:
+  gcp-creds:
+    secret: gcp-creds
+    mountPath: /app/gcp-creds

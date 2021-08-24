@@ -18,10 +18,10 @@ agents: 3 # same as `--agents 2`
 #       - server[0]
 #       - agent[*]
 ports:
-  - port: 8080:8080 # same as `--port '8080:80@loadbalancer'`
+  - port: 8080:80 # same as `--port '8080:80@loadbalancer'`
     nodeFilters:
       - loadbalancer
-  - port: 8443:8443
+  - port: 8443:443
     nodeFilters:
       - loadbalancer
 

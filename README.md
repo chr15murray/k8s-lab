@@ -12,12 +12,19 @@ fashion for application management using argocd. Key tools are:
 ## Getting started
 
 ```
-k3d cluster create --config k3d-lab.yaml
-helmfile apply
-```
+# Create the Cluster
+k3d cluster create --config k3d/k3d-lab.yaml
 
-This installs argocd and sealed-secrets which then deploys everything else. ArgoCD is combined with a Cloudflare Argo 
-Tunnel (Name is coincidental) to run over an outbound connection instead of requiring firewall rules, port forwarding etc.  
+# Add the External Secrets Namespace and secret
+kubectl apply -f bootstrap/manifests/external-secrets-namespace.yaml
+kubectl apply -f ~/keys/external-secrets-gcp-secret.yaml -n external-secrets
+
+# Install External Secrets
+helmfile -f external-secrets/helmfile.yaml apply
+
+# Deploy ArgoCD
+kubectl kustomize bootstrap/kustomize/ | kubectl apply -f -
+```
 
 ## Cleanup
 
@@ -33,6 +40,3 @@ Visit [ArgoCD](https://argocd.distrail.io) and login with github credentials.
 Login via the CLI (will redirect using and login via the browser)
 `argocd login --sso argocd.distrail.io`
 
-## Sealing secrets
-
-`kubeseal --scope cluster-wide <secret.yaml > sealed-secret.json`

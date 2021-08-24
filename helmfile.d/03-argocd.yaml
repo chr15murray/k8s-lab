@@ -1,55 +1,57 @@
-releases:
-- name: argocd
-  namespace: argocd
-  chart: ../argocd/argocd
-  labels:
-    app: argocd
-  needs:
-  - kube-system/sealed-secrets-controller
-  values:
-  - argocd:
-      sealedSecret: {{ exec "kubeseal" (list "-f" "/home/chris/keys/argocd-secret.yaml" "--scope=cluster-wide" "--cert"  "../sealedsecret.crt") }}
-  missingFileHandler: Error
-- name: argocd-cloudflared
-  namespace: argocd
-  chart: ../cloudflare/argo-tunnel
-  labels:
-    app: argocd
-  values:
-  - cloudflared:
-      hostname: argocd.distrail.io
-      url: https://argocd-server
-      tlsVerify: false
-      sealedSecretCert: {{ exec "kubeseal" (list "--raw" "--from-file=/home/chris/keys/cloudflared/origin-cert.pem" "--scope=cluster-wide" "--cert" "../sealedsecret.crt" ) }}
-- name: argocd-raw
-  namespace: argocd
-  chart: raw/raw
-  version: 1.1.0
-  labels:
-    app: argocd-raw
-  missingFileHandler: Error
-  values:
-  - resources:
-    - {{ exec "kubeseal" (list "-f" "/home/chris/keys/argocd-repo-distrail-io.yaml" "--scope=cluster-wide" "--cert"  "../sealedsecret.crt" ) }}
-    - apiVersion: argoproj.io/v1alpha1
-      kind: Application
-      metadata:
-        name: argocd-bootstrap
-        namespace: argocd
-        finalizers:
-        - resources-finalizer.argocd.argoproj.io
-      spec:
-        destination:
-          namespace: argocd
-          server: https://kubernetes.default.svc
-        project: default
-        source:
-          path: argocd-bootstrap
-          repoURL: https://github.com/distrail-io/k8s-lab-apps.git
-          targetRevision: HEAD
-          directory:
-            recurse: true
-        syncPolicy:
-          automated:
-            prune: true
-            selfHeal: true
+# releases:
+# - name: argocd
+#   namespace: argocd
+#   chart: ../argocd/argocd
+#   labels:
+#     app: argocd
+#   needs:
+#   - kube-system/sealed-secrets-controller
+#   values:
+#   - argocd:
+#       sealedSecret: {{ exec "kubeseal" (list "-f" "/home/chris/keys/argocd-secret.yaml" "--scope=cluster-wide" "--cert"  "../sealedsecret.crt") }}
+#   missingFileHandler: Error
+# - name: argocd-cloudflared
+#   namespace: argocd
+#   chart: ../cloudflare/argo-tunnel
+#   labels:
+#     app: argocd
+#   values:
+#   - cloudflared:
+#       hostname: argocd.distrail.io
+#       url: https://argocd-server
+#       tlsVerify: false
+#       sealedSecretCert: {{ exec "kubeseal" (list "--raw" "--from-file=/home/chris/keys/cloudflared/origin-cert.pem" "--scope=cluster-wide" "--cert" "../sealedsecret.crt" ) }}
+# - name: argocd-raw
+#   namespace: argocd
+#   chart: raw/raw
+#   version: 1.1.0
+#   labels:
+#     app: argocd-raw
+#   needs:
+#   - argocdm/argocd
+#   missingFileHandler: Error
+#   values:
+#   - resources:
+#     - {{ exec "kubeseal" (list "-f" "/home/chris/keys/argocd-repo-distrail-io.yaml" "--scope=cluster-wide" "--cert"  "../sealedsecret.crt" ) }}
+#     - apiVersion: argoproj.io/v1alpha1
+#       kind: Application
+#       metadata:
+#         name: argocd-bootstrap
+#         namespace: argocd
+#         finalizers:
+#         - resources-finalizer.argocd.argoproj.io
+#       spec:
+#         destination:
+#           namespace: argocd
+#           server: https://kubernetes.default.svc
+#         project: default
+#         source:
+#           path: argocd-bootstrap
+#           repoURL: https://github.com/distrail-io/k8s-lab-apps.git
+#           targetRevision: HEAD
+#           directory:
+#             recurse: true
+#         syncPolicy:
+#           automated:
+#             prune: true
+#             selfHeal: true
